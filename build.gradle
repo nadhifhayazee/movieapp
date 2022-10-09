@@ -1,4 +1,29 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    ext {
+        hilt_version = "2.40.5"
+        retrofit2_version = "2.9.0"
+        gson_version = "2.8.9"
+        retrofit2_converters_version = "2.7.1"
+        okhttp3_version = "4.9.1"
+        nav_version = "2.5.2"
+        coroutine_version = "1.6.4"
+        lifecycle_version = "2.5.1"
+        fragment_version = "1.5.3"
+        paging_version = "3.1.1"
+        camerax_version = "1.1.0-beta02"
+        circle_indicator_version = "2.1.6"
+        image_carousel_version = "2.0.6"
+    }
+
+    dependencies {
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.2'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false

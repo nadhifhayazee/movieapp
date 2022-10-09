@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_nav_graph"
+    app:startDestination="@id/tv_fragment">
+
+    <fragment
+        android:id="@+id/tv_fragment"
+        android:name="com.nadhif.hayazee.tv.tv_list.TvFragment"
+        tools:layout="@layout/fragment_tv" >
+        <action
+            android:id="@+id/action_tv_fragment_to_tv_detail_fragment"
+            app:destination="@id/tv_detail_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tv_detail_fragment"
+        android:name="com.nadhif.hayazee.tv.tv_detail.TvDetailFragment"
+        tools:layout="@layout/fragment_movie_detail" />
+</navigation>
