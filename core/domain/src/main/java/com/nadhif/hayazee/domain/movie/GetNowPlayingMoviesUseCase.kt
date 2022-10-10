@@ -1,6 +1,7 @@
 package com.nadhif.hayazee.domain.movie
 
 import com.nadhif.hayazee.common.model.ResponseState
+import com.nadhif.hayazee.common.util.EspressoIdlingResource
 import com.nadhif.hayazee.data.movie.MovieRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,8 +17,8 @@ class GetNowPlayingMoviesUseCase @Inject constructor(
 
     operator fun invoke(): Flow<ResponseState<List<CarouselItem>>> {
         return flow {
+            EspressoIdlingResource.increment()
             emit(ResponseState.Loading())
-            delay(1500)
             try {
                 when (val movies = movieRepository.getNowPlayingMovies()) {
                     is ResponseState.SuccessWithData -> {
@@ -38,6 +39,8 @@ class GetNowPlayingMoviesUseCase @Inject constructor(
             } catch (e: Exception) {
                 emit(ResponseState.Error(e.message))
             }
+            EspressoIdlingResource.decrement()
+
         }
     }
 }

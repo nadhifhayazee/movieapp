@@ -1,4 +1,4 @@
-package com.nadhif.hayazee.movie
+package com.nadhif.hayazee.database
 
 import org.junit.Test
 

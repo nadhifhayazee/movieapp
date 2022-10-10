@@ -3,9 +3,7 @@
 
     <color name="grayscale_01">#0A0E2B</color>
     <color name="grayscale_line">#1E223E</color>
-    <color name="grayscale_02">#486784</color>
     <color name="grayscale_03">#9CAFC1</color>
-    <color name="grayscale_04">#C7D4E0</color>
     <color name="yellow_primary">#f1c40f</color>
 
 </resources>

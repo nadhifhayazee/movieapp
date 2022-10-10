@@ -17,7 +17,6 @@ class GetNowPlayingTvUseCase @Inject constructor(
     operator fun invoke(): Flow<ResponseState<List<CarouselItem>>> {
         return flow {
             emit(ResponseState.Loading())
-            delay(1500)
             try {
                 when (val movies = movieRepository.getNowPlayingMovies()) {
                     is ResponseState.SuccessWithData -> {

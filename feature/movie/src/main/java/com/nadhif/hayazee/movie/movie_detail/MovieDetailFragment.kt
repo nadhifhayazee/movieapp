@@ -26,23 +26,46 @@ class MovieDetailFragment :
     private val movieDetailViewModel by viewModels<MovieDetailViewModel> { movieDetailVmFactory }
 
     private var movie: Movie? = null
+    private var id: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movie = it.getParcelable(Constant.MOVIE_DATA)
+            id = it.getString(Constant.MOVIE_ID) ?: movie?.id.toString()
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBack()
+        setupListener()
         setupView()
         observeVm()
-        movieDetailViewModel.getMovieDetail(movie?.id.toString())
+        observeFavoriteMovie()
+        observeFavoriteButtonClicked()
+        id?.let {
+            movieDetailViewModel.isFavoriteMovie(it.toInt())
+            movieDetailViewModel.getMovieDetail(it)
+        }
 
 
+    }
+
+    private fun observeFavoriteButtonClicked() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            movieDetailViewModel.isAddToFavorite.collectLatest {
+                setFavoriteIcon(it)
+            }
+        }
+    }
+
+    private fun observeFavoriteMovie() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            movieDetailViewModel.favoriteMovieState.collectLatest { favoriteMovie ->
+                setFavoriteIcon(favoriteMovie != null)
+            }
+        }
     }
 
     private fun observeVm() {
@@ -81,14 +104,30 @@ class MovieDetailFragment :
                 tvRating.text = it.vote_average.toString()
                 tvGenres.text = it.getGenres()
                 tvRuntime.text = it.runtime.getRuntimeString()
+
+
             }
+
         }
     }
 
-    private fun setupBack() {
+    private fun setFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.ivFavorite.setImageResource(com.nadhif.hayazee.baseview.R.drawable.ic_favorite_filled)
+        } else {
+            binding.ivFavorite.setImageResource(com.nadhif.hayazee.baseview.R.drawable.ic_favorite_outlined)
+
+        }
+    }
+
+    private fun setupListener() {
         binding.apply {
             toolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
+            }
+
+            ivFavorite.setOnClickListener { _ ->
+                movie?.let { movieDetailViewModel.addMovieToFavorite(it) }
             }
         }
     }

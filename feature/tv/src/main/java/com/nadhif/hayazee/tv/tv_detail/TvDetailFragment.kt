@@ -22,33 +22,56 @@ class TvDetailFragment :
     BaseFragment<FragmentMovieDetailBinding>(FragmentMovieDetailBinding::inflate) {
 
     @Inject
-    lateinit var movieDetailVmFactory: TvDetailViewModel.Factory
-    private val movieDetailViewModel by viewModels<TvDetailViewModel> { movieDetailVmFactory }
+    lateinit var tvDetailVmFactory: TvDetailViewModel.Factory
+    private val tvDetailViewModel by viewModels<TvDetailViewModel> { tvDetailVmFactory }
 
     private var movie: Movie? = null
+    private var id: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movie = it.getParcelable(Constant.MOVIE_DATA)
+            id = it.getString(Constant.MOVIE_ID) ?: movie?.id.toString()
+
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBack()
+        setupListener()
         setupView()
         observeVm()
-        movieDetailViewModel.getTvDetail(movie?.id.toString())
+        observeFavoriteMovie()
+        observeFavoriteButtonClicked()
+        id?.let {
+            tvDetailViewModel.isFavoriteTv(it.toInt())
+            tvDetailViewModel.getTvDetail(it)
+        }
 
 
     }
 
+    private fun observeFavoriteButtonClicked() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            tvDetailViewModel.isAddToFavorite.collectLatest {
+                setFavoriteIcon(it)
+            }
+        }
+    }
+
+    private fun observeFavoriteMovie() {
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            tvDetailViewModel.favoriteTvState.collectLatest { favoriteMovie ->
+                setFavoriteIcon(favoriteMovie != null)
+            }
+        }
+    }
 
     private fun observeVm() {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            movieDetailViewModel.tvDetailState.collectLatest {
+            tvDetailViewModel.tvDetailState.collectLatest {
                 when (it) {
                     is ResponseState.Loading -> {
 
@@ -86,10 +109,23 @@ class TvDetailFragment :
         }
     }
 
-    private fun setupBack() {
+    private fun setFavoriteIcon(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.ivFavorite.setImageResource(com.nadhif.hayazee.baseview.R.drawable.ic_favorite_filled)
+        } else {
+            binding.ivFavorite.setImageResource(com.nadhif.hayazee.baseview.R.drawable.ic_favorite_outlined)
+
+        }
+    }
+
+    private fun setupListener() {
         binding.apply {
             toolbar.setNavigationOnClickListener {
                 findNavController().popBackStack()
+            }
+
+            ivFavorite.setOnClickListener { _ ->
+                movie?.let { tvDetailViewModel.addTvToFavorite(it) }
             }
         }
     }

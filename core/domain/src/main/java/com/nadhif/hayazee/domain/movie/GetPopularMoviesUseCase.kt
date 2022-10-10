@@ -2,6 +2,7 @@ package com.nadhif.hayazee.domain.movie
 
 import com.nadhif.hayazee.common.model.Movie
 import com.nadhif.hayazee.common.model.ResponseState
+import com.nadhif.hayazee.common.util.EspressoIdlingResource
 import com.nadhif.hayazee.data.movie.MovieRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -16,8 +17,8 @@ class GetPopularMoviesUseCase @Inject constructor(
 
     operator fun invoke(): Flow<ResponseState<List<Movie>>> {
         return flow {
+            EspressoIdlingResource.increment()
             emit(ResponseState.Loading())
-            delay(2000)
             try {
                 val movies = movieRepository.getPopularMovies()
                 emit(movies)
@@ -25,6 +26,8 @@ class GetPopularMoviesUseCase @Inject constructor(
             } catch (e: Exception) {
                 emit(ResponseState.Error(e.localizedMessage))
             }
+            EspressoIdlingResource.decrement()
+
         }
     }
 }

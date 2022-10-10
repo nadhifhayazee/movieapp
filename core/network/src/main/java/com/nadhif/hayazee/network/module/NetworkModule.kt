@@ -68,16 +68,5 @@ object NetworkModule {
             .create(ApiService::class.java)
     }
 
-//    @Provides
-//    @Named(Constant.HiltNamed.NETWORK_INTERCEPTOR)
-//    fun provideNetworkInterceptor(
-//        @ApplicationContext context: Context
-//    ): Interceptor = Interceptor { chain ->
-//        val request: Request = chain.request()
-//        if (!NetworkUtils.isConnected(context)) {
-//            throw NetworkConnectionException(context)
-//        }
-//        chain.proceed(request)
-//    }
 
 }

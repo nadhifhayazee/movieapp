@@ -17,7 +17,6 @@ class GetPopularTvUseCase @Inject constructor(
     operator fun invoke(): Flow<ResponseState<List<Movie>>> {
         return flow {
             emit(ResponseState.Loading())
-            delay(2000)
             try {
                 val movies = movieRepository.getPopularMovies()
                 emit(movies)

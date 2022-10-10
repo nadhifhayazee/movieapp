@@ -17,5 +17,9 @@
     <fragment
         android:id="@+id/tv_detail_fragment"
         android:name="com.nadhif.hayazee.tv.tv_detail.TvDetailFragment"
-        tools:layout="@layout/fragment_movie_detail" />
+        tools:layout="@layout/fragment_movie_detail" >
+
+        <deepLink app:uri="android-app://com.nadhif.movieapp/detail_tv/{MOVIE_ID}"/>
+
+    </fragment>
 </navigation>
